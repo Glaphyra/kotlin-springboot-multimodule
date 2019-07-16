@@ -1,0 +1,63 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'de.qaware.gradle.plugin:xsd2java-gradle-plugin:1.0.0'
+        classpath 'no.nils:wsdl2java:0.10'
+    }
+}
+
+plugins {
+    id 'groovy'
+    id 'java'
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'no.nils.wsdl2java'
+
+sourceCompatibility = 1.8
+
+def sourcesDirJaxb = "${buildDir}/generated-sources/jaxb"
+
+configurations {
+    jaxb
+    ktlint
+    all {
+        exclude group: 'log4j', module: 'log4j'
+    }
+}
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.3.11'
+}
+
+wsdl2java{
+    encoding = 'utf-8'
+    wsdlsToGenerate = [
+            ["$projectDir/src/main/resources/wsdl/calculator.wsdl"]
+    ]
+    generatedWsdlDir = file("$buildDir/generated-sources/jaxb")
+    wsdlDir = file("$projectDir/src/main/resources/wsdl")
+}
+
+wsdl2javaExt.cxfVersion = "3.3.2"
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+    dependsOn wsdl2java
+    source sourcesDirJaxb
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+    dependsOn wsdl2java
+    source sourcesDirJaxb
+}
+
+tasks.eclipseClasspath.dependsOn wsdl2java
+
+sourceSets {
+    main.java.srcDirs += sourcesDirJaxb
+}

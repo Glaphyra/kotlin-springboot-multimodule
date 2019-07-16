@@ -1,0 +1,51 @@
+<html>
+<head>
+	<title th:text="${title}"></title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            changeSymbol();
+
+            $("#operations").change(function(){
+                changeSymbol();
+            })
+
+            function changeSymbol() {
+                switch($("#operations").val()) {
+                    case "ADD":
+                        $("#operationSymbol").text("+");
+                        break;
+                    case "DIVIDE":
+                        $("#operationSymbol").text("/");
+                        break;
+                    case "MULTIPLY":
+                        $("#operationSymbol").text("*");
+                        break;
+                    case "SUBSTRACT":
+                        $("#operationSymbol").text("-");
+                        break;
+                }
+            }
+        })
+    </script>
+</head>
+
+<body>
+
+<h1 th:text="${title}"></h1>
+
+<form method="post" th:object="${mathOperation}">
+    <select id="operations" th:field="*{operation}">
+        <option th:each="operation : ${T(com.test.model.Operation).values()}" th:value="${operation}" th:text="${operation}"></option>
+    </select>
+    <br/>
+    <input type="number" th:field="*{intA}" required/>
+    <span id="operationSymbol"></span>
+    <input type="number" th:field="*{intB}" required/>
+    <input type="submit" value="="/>
+    <span th:if="${result != null}" th:text="${result}"></span>
+</form>
+
+</body>
+</html>
+

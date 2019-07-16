@@ -1,0 +1,15 @@
+/.idea/
+/.gradle/
+/build/
+/.project
+/.settings
+
+/web/build/
+/web/out/
+/web/bin/
+/web/.project
+
+/connection/build/
+/connection/out/
+/connection/bin/
+/connection/.project
